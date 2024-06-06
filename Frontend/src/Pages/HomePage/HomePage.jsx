@@ -20,7 +20,7 @@ const HomePage = () => {
         borderWidth={'1px'}
         >
 
-        <Text fontSize={'4xl'} fontStyle={'Work sans'} color={'black'}>Talk-A-Tive</Text>
+        <Text fontSize={'4xl'} fontStyle={'Work sans'} color={'black'}>Chat Line</Text>
       </Box>
 
       <Box bg={'white'} p={4} borderRadius={'lg'} borderWidth={'1px'} w={'100%'}>

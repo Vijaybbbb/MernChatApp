@@ -1,7 +1,8 @@
 import { Box, Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, Show, Toast, VStack, position } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useToast } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import {axiosRequest} from '../../utils/axiosRequest'
+import ToastMessage from '../Toast/ToastMessage'
+import { useToast } from '@chakra-ui/react'
 
 const Signup = () => {
 
@@ -14,11 +15,12 @@ const Signup = () => {
 
        })
        const [show,setShow]  = useState(false)
+       const [showToast,setShowToast]  = useState(false)
+       const toast = useToast()
        const [loading,setLoading]  = useState(false)
        const [images,setImages]  = useState(undefined)
-       const toast = useToast()
-
        function getData (e){
+              checkEmptyField()
               e.preventDefault()
               setUserData({
                      ...userData,
@@ -27,51 +29,68 @@ const Signup = () => {
               })
        }
 
+       function checkEmptyField(){
+              if (userData.name == null || userData.email == null || userData.password == null || userData.confirmPassword == null ) {                
+                     setShowToast(true)
+              }else{
+                     setShowToast(false)  
+              } 
+       }
+
+       useEffect(()=>{
+              checkEmptyField()
+       },[userData])
+
        function handleShowHide(){
               setShow(!show)
        }
 
+       function toastMessage(message,status){
+              toast({
+                     title:message,
+                     status: status,
+                     duration: 5000,
+                     isClosable: true,
+                     position:'bottom'
+                   })
+       }
+
 
        async function handleSubmit(e){
-       console.log(images);
-
               e.preventDefault()
-              setLoading(true)
-              if (images ==undefined) {
+              if (showToast == true) {
+                     toastMessage('All field are required','error')                   
+                     return
+              }      
+              if (images==undefined ) {
                      toast({
                             title: 'Select an image',
-                            status: 'warning',
+                            status: 'error',
                             duration: 5000,
                             isClosable: true,
                             position:'bottom'
                           })
+                    
+                     return
               }
-
-
-
+              if (userData.password !== userData.confirmPassword ) {
+                     toastMessage('Password do not match','error')                   
+                     return
+              }
             
               try {
-                     const formData = new FormData();
-
-              
-                     formData.append('images', images);
-              
-              for (const key in userData) {
-                     formData.append(key, userData[key]);
-              }
-
-                  axiosRequest.post(`/user/register`, formData,
-
+                    
+                  axiosRequest.post(`/user/register`, {images,userData},
                      {
                             withCredentials: true,
                             headers: {
-                                   'Content-Type': 'multipart/form-data'
+                                   'Content-Type': 'application/json'
                             }
                      }).then((res) => {
-       
-
+                            toastMessage('Registration Success','success')
                      }).catch((error) => {
-                            console.log(error);
+                            toastMessage('Registration failed','error')
+
                      })
               } catch (error) {
                      
@@ -82,9 +101,33 @@ const Signup = () => {
 
 
        function onInputChange(e){ 
-              
+              setLoading(true)
+              setImages(e.target.files[0])
+              if (!e.target.files[0]) {
+                     toastMessage('Select an image','error')
+                     return
+              }
+              try {
+                     const formData = new FormData();
+              formData.append('file', e.target.files[0]);
+              formData.append('upload_preset','Chat-App')
+              formData.append('cloud_name','dfozstttc')
+              fetch('https://api.cloudinary.com/v1_1/dfozstttc/image/upload',{
+                     method:'post',
+                     body:formData
+              }).then((res)=>res.json())
+                     .then((data)=>{
+                            setImages(data.url.toString())
+                            setLoading(false)
+                     }).catch(err=>console.log(err))
+              } catch (error) {
+                     toastMessage('Select an image','error')
+                     console.log(error)
+                     return
+                    
+              }
 
-              setImages(e.target.files[0]); 
+
        }
 
 
@@ -171,6 +214,7 @@ const Signup = () => {
      width={'100%'}
      mt={15}
      onClick={handleSubmit}
+     isLoading={loading}
      >
        Signup
      </Button>

@@ -6,7 +6,7 @@
 
 const register = async(req,res,next) =>{
        console.log(req.body);
-       console.log(req.files);
+     res.status(200).json('success')
 
 }
 
