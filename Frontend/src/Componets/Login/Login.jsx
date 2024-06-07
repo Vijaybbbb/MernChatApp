@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, Show, VStack } from '@chakra-ui/react';
 import { axiosRequest } from '../../utils/axiosRequest';
 import { useToast } from '@chakra-ui/react'
+import {useNavigate} from 'react-router-dom'
+
 
 const Login = () => {
 
-
-  const toast = useToast()
+const navigate = useNavigate()
+  const toast = useToast()  
   const [userData, setUserData] = useState({
     email: '',
     password: '',
@@ -50,7 +52,7 @@ const Login = () => {
         },
       });
       toastMessage('Login Successfull','success')                   
- 
+      navigate('/chats')
     } catch (error) {
       //console.log(error);
       toastMessage(error.response.data.message,'error')

@@ -32,7 +32,7 @@ const HomePage = () => {
           <TabPanels>
 
             <TabPanel>
-                      <Login/>
+                      <Login/>  
             </TabPanel>
 
 

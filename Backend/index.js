@@ -10,6 +10,7 @@ dotenv.config()
 const PORT =  process.env.PORT || 3000
 connect()
 const userRouter = require('./Router/user') 
+const { verifyTocken } = require('./Utils/verifyTocken')
 
 
 //middlewares 

@@ -26,7 +26,12 @@ const register = async (req, res, next) => {
                      httpOnly: true,
                      path: '/'
               }
-              ).status(200).json({ ...otherDetails });
+              ).cookie('user_id', user._id, {
+                     httpOnly: true,
+                    // secure: process.env.NODE_ENV === 'production',
+                     path: '/', // Restrict access to the root path (adjust as needed)
+                    // expires: new Date(Date.now() + 60 * 60 * 1000), // Set a shorter expiration for token (e.g., 1 hour)
+                   }).status(200).json({ ...otherDetails });
        } catch (error) {
               console.log(error);
               return next(createError(401,'Failed'))   
@@ -51,7 +56,12 @@ const login = async (req, res, next) => {
                             httpOnly:true,
                             path:'/'
                             }
-                            ).status(200).json({...otherDetails});
+                            ).cookie('user_id', existingUser._id, {
+                                   httpOnly: true,
+                                  // secure: process.env.NODE_ENV === 'production',
+                                   path: '/', // Restrict access to the root path (adjust as needed)
+                                  // expires: new Date(Date.now() + 60 * 60 * 1000), // Set a shorter expiration for token (e.g., 1 hour)
+                                 }).status(200).json({...otherDetails});
               }
               else{
                      return next(createError(401,'Invalid Credentials'))
@@ -66,7 +76,24 @@ const login = async (req, res, next) => {
 }
 
 
+const allUsers = async (req, res, next) => {
+      
+       try {
+              const keyword = req.query.search ? {
+                     $or:[
+                            {name:{$regex:req.query.search,$options:'i'}},
+                            {email:{$regex:req.query.search,$options:'i'}}
 
+                     ]
+              }:{}
+
+              const users = await User.find(keyword).find({_id:{$ne:req.user}})
+              res.status(200).json(users)
+
+       } catch (error) {
+
+       }
+}
 
 
 
@@ -74,5 +101,6 @@ const login = async (req, res, next) => {
 
 module.exports = {
        register,
-       login
+       login,
+       allUsers
 }
