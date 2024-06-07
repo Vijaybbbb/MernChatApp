@@ -7,10 +7,10 @@ import { useToast } from '@chakra-ui/react'
 const Signup = () => {
 
        const [userData,setUserData] = useState({
-             name:null,
-             email:null, 
-             password:null, 
-             confirmPassword:null, 
+             name:'',
+             email:'', 
+             password:'', 
+             confirmPassword:'', 
             
 
        })
@@ -20,7 +20,6 @@ const Signup = () => {
        const [loading,setLoading]  = useState(false)
        const [images,setImages]  = useState(undefined)
        function getData (e){
-              checkEmptyField()
               e.preventDefault()
               setUserData({
                      ...userData,
@@ -30,16 +29,13 @@ const Signup = () => {
        }
 
        function checkEmptyField(){
-              if (userData.name == null || userData.email == null || userData.password == null || userData.confirmPassword == null ) {                
-                     setShowToast(true)
+              if (userData.name == '' || userData.email == '' || userData.password == '' || userData.confirmPassword == '' ) {                
+                     return true
               }else{
-                     setShowToast(false)  
+                     return false 
               } 
        }
 
-       useEffect(()=>{
-              checkEmptyField()
-       },[userData])
 
        function handleShowHide(){
               setShow(!show)
@@ -58,7 +54,8 @@ const Signup = () => {
 
        async function handleSubmit(e){
               e.preventDefault()
-              if (showToast == true) {
+
+              if (checkEmptyField()) {
                      toastMessage('All field are required','error')                   
                      return
               }      
@@ -89,7 +86,8 @@ const Signup = () => {
                      }).then((res) => {
                             toastMessage('Registration Success','success')
                      }).catch((error) => {
-                            toastMessage('Registration failed','error')
+                            console.log(error);
+                           toastMessage(error.response.data.message,'error')
 
                      })
               } catch (error) {
@@ -122,7 +120,6 @@ const Signup = () => {
                      }).catch(err=>console.log(err))
               } catch (error) {
                      toastMessage('Select an image','error')
-                     console.log(error)
                      return
                     
               }
