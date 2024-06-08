@@ -3,12 +3,15 @@ import { Box, Button, FormControl, FormLabel, Input, InputGroup, InputRightEleme
 import { axiosRequest } from '../../utils/axiosRequest';
 import { useToast } from '@chakra-ui/react'
 import {useNavigate} from 'react-router-dom'
-
+import { useDispatch } from 'react-redux';
+import {storeUser} from '../../Redux/userSlice'
 
 const Login = () => {
 
-const navigate = useNavigate()
-  const toast = useToast()  
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const toast = useToast()
   const [userData, setUserData] = useState({
     email: '',
     password: '',
@@ -23,7 +26,6 @@ const navigate = useNavigate()
   };
 
   const handleShowHide = () => setShow(!show);
-
 
   function toastMessage(message,status){
     toast({
@@ -51,7 +53,8 @@ const navigate = useNavigate()
           'Content-Type': 'application/json',
         },
       });
-      toastMessage('Login Successfull','success')                   
+      toastMessage('Login Successfull','success') 
+      dispatch(storeUser(response?.data?._id))                  
       navigate('/chats')
     } catch (error) {
       //console.log(error);
