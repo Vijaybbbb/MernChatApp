@@ -9,7 +9,9 @@ const { connect } = require('./Utils/databaseConnection')
 dotenv.config()
 const PORT =  process.env.PORT || 3000
 connect()
-const userRouter = require('./Router/user') 
+const userRouter = require('./Router/user')
+const chatRouter = require('./Router/chat')
+
 const { verifyTocken } = require('./Utils/verifyTocken')
 
 
@@ -29,6 +31,7 @@ app.use(cors({
 
 
 app.use('/user',userRouter)
+app.use('/chat',chatRouter)
 
 app.use((err,req,res,next)=>{
        const errorStatus  = err.status || 500
