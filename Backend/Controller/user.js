@@ -77,7 +77,7 @@ const login = async (req, res, next) => {
 
 
 const allUsers = async (req, res, next) => {
-      
+      console.log('entered');
        try {
               const keyword = req.query.search ? {
                      $or:[

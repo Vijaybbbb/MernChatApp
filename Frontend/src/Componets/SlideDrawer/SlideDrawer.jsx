@@ -1,12 +1,23 @@
 import React, { Profiler, useState } from 'react'
 import './SlideDrawer.css'
-import { Avatar, Box, Button, ChakraBaseProvider, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react'
+import { Avatar, Box, Button, ChakraBaseProvider, Input, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import Profile from '../Profile/Profile'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { useNavigate } from 'react-router-dom'
 import {storeUser} from '../../Redux/userSlice'
+import {
+       Drawer,
+       DrawerBody,
+       DrawerFooter,
+       DrawerHeader,
+       DrawerOverlay,
+       DrawerContent,
+       DrawerCloseButton,
+     } from '@chakra-ui/react'
+import Chatloading from '../Chatloading/Chatloading'
+import UserListItem from '../UserlistItem/UserListItem'
 
 const SlideDrawer = () => {
  const {userName,pic,_id} = useSelector(state => state.userDetails)
@@ -19,6 +30,9 @@ const SlideDrawer = () => {
   const [loadingChat,setLoadingChat]  = useState()
   const navigate  = useNavigate()
   const dispatch = useDispatch()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
+
 
   function handleLogout(e){
        e.preventDefault()
@@ -32,6 +46,48 @@ const SlideDrawer = () => {
               navigate('/')
              }).catch(err=>console.log(err))
 }
+
+
+async function handleSearch(e){
+       e.preventDefault()
+       if(search==''){
+              toast({
+                     title:'Search is empty',
+                     status: 'error',
+                     duration: 1000,
+                     isClosable: true, 
+                     position:'top-left'
+                   })
+       }
+
+       try {
+              setLoading(true)
+              const {data}  =await axiosRequest.get(`/user/allUsers?search=${search}`,{withCredentials:true})
+              setLoading(false)
+              setSearchResult(data)
+
+       } catch (error) {
+              toast({
+                     title:'Something went wrong',
+                     status: 'error',
+                     duration: 1000,
+                     isClosable: true, 
+                     position:'top-left'
+                   })
+       }
+}
+
+async function accessChat(userid){
+
+       try {
+             setLoadingChat(true)
+              
+       } catch (error) {
+              
+       }
+}
+
+
 
   return (
     <div>
@@ -47,7 +103,7 @@ const SlideDrawer = () => {
 
        >
               <Tooltip label='Search Users to Chat ' hasArrow placement='bottom-end'>
-                     <Button variant={'ghost'}>
+                     <Button variant={'ghost'} onClick={onOpen}>
                          <i class="fa-solid fa-magnifying-glass"></i>
                          <Text d={{base:'none',md:'flex'}} px='4'>
                             Search User
@@ -84,6 +140,45 @@ const SlideDrawer = () => {
                      </Menu>
               </div>
        </Box>
+
+       <Drawer
+        isOpen={isOpen}
+        placement='left'
+        onClose={onClose}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Create your account</DrawerHeader>
+
+          <DrawerBody>
+               <Box display={'flex'} pb={2}>
+                            <Input
+                            placeholder='Search by name or email'
+                            mr={2}
+                            value={search}
+                            onChange={(e)=>{setSearch(e.target.value)}}
+                            />
+                            <Button onClick={handleSearch}>Go</Button>
+               </Box>
+               {loading?(
+                     <Chatloading/>  
+               ):(
+                searchResult?.map((user)=>(
+                     <UserListItem
+                     key={user._id}
+                     user={user}
+                     handleFunction={()=>accessChat(user._id)}
+                     >
+                            
+                     </UserListItem>
+                ))
+               )}
+          </DrawerBody>
+
+       
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }
