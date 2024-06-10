@@ -53,8 +53,9 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
       });
+      //console.log(response);
       toastMessage('Login Successfull','success') 
-      dispatch(storeUser(response?.data?._id))                  
+      dispatch(storeUser(response.data))                  
       navigate('/chats')
     } catch (error) {
       //console.log(error);

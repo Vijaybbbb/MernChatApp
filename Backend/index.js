@@ -45,5 +45,15 @@ app.use((err,req,res,next)=>{
        })
 })
 
+app.post('/clearCookie', (req, res) => {
+       // Set the cookie's expiration date to a past time
+       try {
+              res.cookie('access_tocken', '', { expires: new Date(0) });
+              // Send a response
+              res.status(200).json('Cookie cleared'); 
+       } catch (error) {
+              console.log(error);
+       }
+   });
 
 app.listen(PORT,()=>{`Server Started On Port 3000`})
