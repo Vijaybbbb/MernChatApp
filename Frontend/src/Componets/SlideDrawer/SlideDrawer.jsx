@@ -7,6 +7,8 @@ import Profile from '../Profile/Profile'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { useNavigate } from 'react-router-dom'
 import {storeUser} from '../../Redux/userSlice'
+import {setSelectedChat} from '../../Redux/selectedChatSlice'
+
 import {
        Drawer,
        DrawerBody,
@@ -19,8 +21,12 @@ import {
 import Chatloading from '../Chatloading/Chatloading'
 import UserListItem from '../UserlistItem/UserListItem'
 
+
+
+
+
 const SlideDrawer = () => {
- const {userName,pic,_id} = useSelector(state => state.userDetails)
+ const {userName,pic,_id:userId} = useSelector(state => state.userDetails)
  const user = useSelector(state => state.userDetails)
 
 
@@ -28,6 +34,8 @@ const SlideDrawer = () => {
   const [searchResult,setSearchResult]  = useState([])
   const [loading,setLoading]  = useState(false)
   const [loadingChat,setLoadingChat]  = useState()
+  const [selectedChat,setSelectedChat]  = useState()
+
   const navigate  = useNavigate()
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -81,9 +89,13 @@ async function accessChat(userid){
 
        try {
              setLoadingChat(true)
-              
+             const {data}  = await axiosRequest.post(`/chat`,{userId},{withCredentials:true})
+             dispatch(setSelectedChat(data))
+             setLoadingChat(false)
+             onclose() 
+       
        } catch (error) {
-              
+             console.log(error); 
        }
 }
 
@@ -149,7 +161,7 @@ async function accessChat(userid){
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Create your account</DrawerHeader>
+          <DrawerHeader>Search User</DrawerHeader>
 
           <DrawerBody>
                <Box display={'flex'} pb={2}>

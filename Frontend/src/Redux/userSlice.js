@@ -5,14 +5,16 @@ const loginSlice = createSlice({
        initialState:{
               userId:null,
               userName:null,
-              pic:null
+              pic:null,
+
        },
        reducers:{
               storeUser:(state,action)=>{
                    state.userId = action.payload._id
                    state.userName = action.payload.name
                    state.pic = action.payload.pic
-              }
+              },
+             
        }
 })
  
