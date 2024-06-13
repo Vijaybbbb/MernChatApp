@@ -1,6 +1,6 @@
 import React, { Profiler, useState } from 'react'
 import './SlideDrawer.css'
-import { Avatar, Box, Button, ChakraBaseProvider, Input, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
+import { Avatar, Box, Button, ChakraBaseProvider, Input, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import Profile from '../Profile/Profile'
@@ -8,6 +8,8 @@ import { axiosRequest } from '../../utils/axiosRequest'
 import { useNavigate } from 'react-router-dom'
 import {storeUser} from '../../Redux/userSlice'
 import {setSelectedChat} from '../../Redux/selectedChatSlice'
+import {setChat} from '../../Redux/chatsSlice'
+
 
 import {
        Drawer,
@@ -26,15 +28,16 @@ import UserListItem from '../UserlistItem/UserListItem'
 
 
 const SlideDrawer = () => {
- const {userName,pic,_id:userId} = useSelector(state => state.userDetails)
+ const {userName,pic,userId} = useSelector(state => state.userDetails)
  const user = useSelector(state => state.userDetails)
-
+ const {chats} = useSelector(state => state.chatDetails)
+console.log(chats);
 
   const [search,setSearch]  = useState('')
   const [searchResult,setSearchResult]  = useState([])
   const [loading,setLoading]  = useState(false)
   const [loadingChat,setLoadingChat]  = useState()
-  const [selectedChat,setSelectedChat]  = useState()
+  //const [selectedChat,setSelectedChat]  = useState()
 
   const navigate  = useNavigate()
   const dispatch = useDispatch()
@@ -85,20 +88,23 @@ async function handleSearch(e){
        }
 }
 
-async function accessChat(userid){
-
+async function accessChat(userid) {
        try {
-             setLoadingChat(true)
-             const {data}  = await axiosRequest.post(`/chat`,{userId},{withCredentials:true})
-             dispatch(setSelectedChat(data))
-             setLoadingChat(false)
-             onclose() 
-       
+         setLoadingChat(true);
+         const { data } = await axiosRequest.post(`/chat/${userid}`, {}, { withCredentials: true });
+         setChat(data)
+         if (!chats.find((c) => c._id === data._id)) {
+           dispatch(setChat(data)); // Dispatch addChatToStore action
+         }
+     
+         dispatch(setSelectedChat(data)); // Dispatch setSelectedChatAction action
+         setLoadingChat(false);
+         onClose();
        } catch (error) {
-             console.log(error); 
+         console.error(error);
        }
-}
-
+     }
+     
 
 
   return (
@@ -186,6 +192,7 @@ async function accessChat(userid){
                      </UserListItem>
                 ))
                )}
+               {loadingChat && <Spinner ml='auto' display={'flex'}/>}
           </DrawerBody>
 
        

@@ -7,7 +7,7 @@ sender:{
        type:mongoose.Schema.Types.ObjectId,
        ref:'user'
 },
-conteny:{
+content:{
        type:String,
        trim:true
 },

@@ -21,7 +21,7 @@ const verifyTocken = async(req,res,next) =>{
                }
 
               jwt.verify(tocken,process.env.JWT_SECRET_KEY,(err,user)=>{
-                   console.log(user);
+             
                      if(err){
                             console.log(err);
                             return next(createError(401,'Invalid Tocken'))                      
@@ -35,7 +35,7 @@ const verifyTocken = async(req,res,next) =>{
                     
               }) 
        } catch (error) {
-           //   console.log(error);
+              console.log(error);
        }
 
 }

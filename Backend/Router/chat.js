@@ -4,11 +4,11 @@ const { accessChat, fetchChat, createGroup, renameGroup, addToGroup, removeFromG
 const router = express.Router()
 
 
-router.post('/', verifyTocken, accessChat)
+router.post('/:userId', verifyTocken, accessChat)
 
 router.get('/', verifyTocken, fetchChat)
-
-router.post('/group', verifyTocken, createGroup)
+ 
+router.post('/create/group',verifyTocken, createGroup)
 
 router.put('/rename', verifyTocken, renameGroup)
 
