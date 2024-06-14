@@ -9,6 +9,7 @@ import MyChats from '../../Componets/MyChats/MyChats'
 const ChatPage = () => {
   
   const {userId}  = useSelector(state=>state.userDetails)
+  const [fetchAgain,setFetchAgain]  = useState()
 
   return (
     <div style={{width:'100%'}}>
@@ -20,8 +21,8 @@ const ChatPage = () => {
       h='91.5vh'
       p='10px'
       >
-        {userId && <MyChats/>}
-        {userId && <ChatBox/>}
+        {userId && <MyChats  fetchAgain={fetchAgain} />}
+        {userId && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>}
       </Box>
     </div>
   )

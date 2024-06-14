@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useFetch from '../../Hooks/useFetch'
 import { Box, Button, Stack, Text } from '@chakra-ui/react'
@@ -8,19 +8,23 @@ import { setSelectedChat } from '../../Redux/selectedChatSlice'
 import { useNavigate } from 'react-router-dom'
 import {getSender} from '../../utils/chatLogic'
 import GroupChat from '../GroupChat/GroupChat'
+import { setChat } from '../../Redux/chatsSlice'
 
-const MyChats = () => {
+const MyChats = ({}) => {
   const {userId}  = useSelector(state=>state.userDetails)
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
-  console.log(chats);
   const [loggedUser,setLoggedUser]  = useState(userId)
-  const {data } = useFetch(`/chats`)
-  //console.log(data);
+  const {data } = useFetch(`/chat/api/fetchChats`)
+
   const navigate  = useNavigate()
   const dispatch = useDispatch()
 
-
+useEffect(()=>{
+ if(data){
+  dispatch(setChat(data))
+ }
+},[data])
 
  
 
@@ -72,7 +76,7 @@ const MyChats = () => {
     {
       chats ? (
         <Stack overflowY={'scroll'}>
-          {chats.map((chat)=>(
+          {chats?.map((chat)=>(
             <Box
                  onClick={()=>dispatch(setSelectedChat(chat))}
                  cursor={'pointer'}

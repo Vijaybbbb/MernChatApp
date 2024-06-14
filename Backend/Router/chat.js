@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/:userId', verifyTocken, accessChat)
 
-router.get('/', verifyTocken, fetchChat)
+router.get('/api/fetchChats',verifyTocken, fetchChat)
  
 router.post('/create/group',verifyTocken, createGroup)
 

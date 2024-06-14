@@ -1,4 +1,4 @@
-const { default: mongoose } = require('mongoose');
+
 const Chat = require('../Model/chatModel');
 const User = require('../Model/userModel')
 
@@ -49,11 +49,12 @@ const accessChat = async (req, res, next) => {
 
 
 const fetchChat = async (req, res, next) => {
+       console.log('entred');
        try {
               Chat.find({
                      users:
                      {
-                            $in:[req.user]
+                            $elemMatch: { $eq: req.user }
                      }
               })
                      .populate('users', '-password')
@@ -61,15 +62,17 @@ const fetchChat = async (req, res, next) => {
                      .populate('latestMessage')
                      .sort({ updated: -1 })
                      .then(async (results) => {
+                            console.log(results);
                             results = await User.populate(results, {
                                    path: 'latestMessage.sender',
                                    select: 'name pic email'
                             })
                             res.status(200).json(results)
 
+                     }).catch((err)=>{
+                            console.log(err);
                      })
-
-
+       
 
        } catch (error) {
               console.log(error);
