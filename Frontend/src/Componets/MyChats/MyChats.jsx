@@ -16,15 +16,16 @@ const MyChats = ({}) => {
   const {chats}  = useSelector(state=>state.chatDetails)
   const [loggedUser,setLoggedUser]  = useState(userId)
   const {data } = useFetch(`/chat/api/fetchChats`)
+  console.log(chats);
 
   const navigate  = useNavigate()
   const dispatch = useDispatch()
 
-useEffect(()=>{
- if(data){
-  dispatch(setChat(data))
- }
-},[data])
+// useEffect(()=>{
+//  if(data){
+//   dispatch(setChat(data))
+//  }
+// },[data])
 
  
 
@@ -76,7 +77,7 @@ useEffect(()=>{
     {
       chats ? (
         <Stack overflowY={'scroll'}>
-          {chats?.map((chat)=>(
+          {data?.map((chat)=>(
             <Box
                  onClick={()=>dispatch(setSelectedChat(chat))}
                  cursor={'pointer'}

@@ -67,7 +67,7 @@ const fetchChat = async (req, res, next) => {
                                    path: 'latestMessage.sender',
                                    select: 'name pic email'
                             })
-                            res.status(200).json(results)
+                            res.status(200).json(results.reverse())
 
                      }).catch((err)=>{
                             console.log(err);
