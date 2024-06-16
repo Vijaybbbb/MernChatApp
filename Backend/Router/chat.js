@@ -10,12 +10,12 @@ router.get('/api/fetchChats',verifyTocken, fetchChat)
  
 router.post('/create/group',verifyTocken, createGroup)
 
-router.put('/rename', verifyTocken, renameGroup)
+router.put('/api/rename', renameGroup)
 
 router.put('/addToGroup', verifyTocken, addToGroup)
 
 router.put('/removeGroup', verifyTocken, removeFromGroup)
 
 
-
+ 
 module.exports = router

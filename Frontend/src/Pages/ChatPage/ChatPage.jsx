@@ -11,6 +11,7 @@ const ChatPage = () => {
   const {userId}  = useSelector(state=>state.userDetails)
   const [fetchAgain,setFetchAgain]  = useState(false)
 
+
   return (
     <div style={{width:'100%'}}>
       {userId && <SlideDrawer/>}

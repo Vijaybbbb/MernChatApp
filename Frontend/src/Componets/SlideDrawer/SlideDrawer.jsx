@@ -28,10 +28,10 @@ import UserListItem from '../UserlistItem/UserListItem'
 
 
 const SlideDrawer = () => {
+
  const {userName,pic,userId} = useSelector(state => state.userDetails)
  const user = useSelector(state => state.userDetails)
  const {chats} = useSelector(state => state.chatDetails)
-console.log(chats);
 
   const [search,setSearch]  = useState('')
   const [searchResult,setSearchResult]  = useState([])

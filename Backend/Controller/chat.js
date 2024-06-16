@@ -49,7 +49,6 @@ const accessChat = async (req, res, next) => {
 
 
 const fetchChat = async (req, res, next) => {
-       console.log('entred');
        try {
               Chat.find({
                      users:
@@ -129,27 +128,33 @@ const createGroup = async (req, res, next) => {
 
 const renameGroup = async (req, res, next) => {
        try {
-              const { chatId, chatName } = req.body
+         const { chatId, chatName } = req.body;
+     
+         const updatedChat = await Chat.findByIdAndUpdate(
+           chatId,
+           {
+             $set: {
+               chatName: chatName,
+             },
+           },
+           { new: true } 
+         )
+           .populate('users', '-password')
+           .populate('groupAdmin', '-password');
 
-              const updatedChat = await Chat.findByIdAndUpdate(chatId,
-                     {
-                            chatName
-                     }, { new: true }
-              )
-                     .populate('users', '-password')
-                     .populate('groupAdmin', '-password')
-
-              if (!updatedChat) {
-                     res.status(404)
-                     throw new Error('Chat not found')
-              } else {
-                     res.status(200).json(updatedChat)
-              }
-
+     
+         if (!updatedChat) {
+           res.status(404);
+           throw new Error('Chat not found');
+         } else {
+           res.status(200).json(updatedChat);
+         }
        } catch (error) {
-
+              console.log(error);
+         res.status(500).json({ message: error.message });
        }
-}
+     };
+     
 
 
 const addToGroup = async (req, res, next) => {

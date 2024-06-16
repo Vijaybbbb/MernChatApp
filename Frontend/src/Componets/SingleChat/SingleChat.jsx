@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedChat } from '../../Redux/selectedChatSlice'
 import { getSender,getSenderFull } from '../../utils/chatLogic'
 import Profile from '../Profile/Profile'
+import UpdateGroupChat from '../UpdateGroupChat/UpdateGroupChat'
 
 const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
   const {userId}  = useSelector(state=>state.userDetails)
- console.log(selectedChat);
+  console.log(selectedChat);
   const dispatch = useDispatch()
 
   return ( 
@@ -47,14 +48,31 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
                       ) : (
                           <>
                           {
-                            selectedChat?.chatName
+                            selectedChat?.chatName.toUpperCase()
                           }
+                            <UpdateGroupChat  fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
+
                           </>
                       )
 
                   }
 
               </Text>
+
+              <Box
+              display={'flex'}
+              flexDir={'column'}
+              justifyContent={'flex-end'}
+              p={3}
+              bg={'#E8E8E8'}
+              w={'100%'}
+              h={'100%'}
+              borderRadius={'lg'}
+              overflowY={'hidden'}
+              >
+
+
+              </Box>
           
           </>
         ):(

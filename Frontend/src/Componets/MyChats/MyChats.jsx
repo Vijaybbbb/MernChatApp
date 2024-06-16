@@ -15,8 +15,7 @@ const MyChats = ({}) => {
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
   const [loggedUser,setLoggedUser]  = useState(userId)
-  const {data } = useFetch(`/chat/api/fetchChats`)
-  console.log(chats);
+  const {data,refetchData } = useFetch(`/chat/api/fetchChats`)
 
   const navigate  = useNavigate()
   const dispatch = useDispatch()
