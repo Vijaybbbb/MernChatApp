@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { Box } from '@chakra-ui/react'
 import SingleChat from '../SingleChat/SingleChat'
 
-const ChatBox = () => {
+const ChatBox = ({fetchAgain,setFetchAgain}) => {
 
   const {selectedChat} = useSelector(state=> state.selectedChatDetails)
 
@@ -20,7 +20,7 @@ const ChatBox = () => {
     borderRadius={'lg'}
     borderWidth={'1px'}
     >
-      <SingleChat/>
+      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
     </Box>
   )
 }
