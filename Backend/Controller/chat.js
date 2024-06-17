@@ -186,8 +186,6 @@ const removeFromGroup = async(req,res,next) =>{
        try {
               const {chatId,userId}  = req.body
 
-              console.log(chatId,userId);
-
               const removed  = await Chat.findByIdAndUpdate(chatId,{
 
                      $pull : {users:userId},
@@ -195,8 +193,6 @@ const removeFromGroup = async(req,res,next) =>{
               }, {new:true})
               .populate('users','-password')
               .populate('groupAdmin','-password')
-
-              console.log(removed);
 
               if(!removed){
                      res.status(404)

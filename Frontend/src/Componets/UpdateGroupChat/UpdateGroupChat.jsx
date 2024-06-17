@@ -23,7 +23,7 @@ import { setSelectedChat } from '../../Redux/selectedChatSlice'
 import UserListItem from '../UserlistItem/UserListItem'
 
 
-const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
+const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
 
 
        const [groupChatName,setGroupChatName]  = useState()
@@ -85,6 +85,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
 
                      userId._id == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
                      setFetchAgain(!fetchAgain)
+                     fetchMessages()
                      setLoading(true)
                      toastMessage('User Removed Successfully','success')
 
