@@ -70,7 +70,6 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
        }
 
        async function handleRemove(userToRemove) {
-             
 
               if(selectedChat.groupAdmin._id !== userId){  
                      toastMessage('Only admin can remove users','error')
@@ -81,7 +80,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
                      setLoading(true)
                      const {data} = await axiosRequest.put(`/chat/removeGroup`,{
                             chatId:selectedChat._id,
-                            userId:userToRemove._id
+                            userId:userToRemove._id ? userToRemove._id : userId
                      },{withCredentials:true})
 
                      userId._id == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
