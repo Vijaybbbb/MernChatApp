@@ -38,6 +38,9 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
        const { isOpen, onOpen, onClose } = useDisclosure() 
        const toast = useToast()
 
+
+            
+
        
        function toastMessage(message,status){
               toast({ 
@@ -66,9 +69,65 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
               }
        }
 
-       async function handleRemove() {
+       async function handleRemove(userToRemove) {
+             
+
+              if(selectedChat.groupAdmin._id !== userId){  
+                     toastMessage('Only admin can remove users','error')
+                     return
+              }
+
+              try {
+                     setLoading(true)
+                     const {data} = await axiosRequest.put(`/chat/removeGroup`,{
+                            chatId:selectedChat._id,
+                            userId:userToRemove._id
+                     },{withCredentials:true})
+
+                     userId._id == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
+                     setFetchAgain(!fetchAgain)
+                     setLoading(true)
+                     toastMessage('User Removed Successfully','success')
 
 
+              } catch (error) {
+                     console.log(error);
+                     toastMessage('Something went wrong','error')
+                     
+              }
+
+       }
+
+       async function handleAddUser(userToAdd) {
+              if(selectedChat.users.find((u)=> u._id === userToAdd._id )){  
+                     toastMessage('User already Exists','error')
+                     return
+              }
+             
+
+              if(selectedChat.groupAdmin._id !== userId){  
+                     toastMessage('Only admin can add users','error')
+                     return
+              }
+
+              try {
+                     setLoading(true)
+                     const {data} = await axiosRequest.put(`/chat/addToGroup`,{
+                            chatId:selectedChat._id,
+                            userId:userToAdd._id
+                     },{withCredentials:true})
+
+                     setSelectedChat(data)
+                     setFetchAgain(!fetchAgain)
+                     setLoading(true)
+                     toastMessage('User Added Successfully','success')
+
+
+              } catch (error) {
+                     toastMessage('Something went wrong','error')
+                     
+              }
+                 
        }
 
        async function handleRename(){
@@ -120,7 +179,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
                                    <UserBadgeItem
                                    key={user._id}
                                    user={user}
-                                   handleFunction={()=>{handleRemove()}}
+                                   handleFunction={()=>{handleRemove(user)}}
                                    />
                             ))
                          }   
@@ -163,14 +222,18 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
                   <div>Loading</div>
                 ):(
                   searchResult?.slice(0,4).map((user)=>(
-                    <UserListItem key={user._id} user={user} handleFunction={()=>handleGroup(user)}/>
+                    <UserListItem key={user._id} user={user} handleFunction={()=>handleAddUser(user)}/>
                   ))
                 )    
               }
-          </ModalBody>
+          </ModalBody> 
 
           <ModalFooter>
-            <Button colorScheme='red' mr={3} onClick={()=>{handleRemove(userId)}}> 
+            <Button colorScheme='red' mr={3} onClick={()=>
+              {
+                     handleRemove(userId)
+                     
+                     }}> 
               Leave Group
             </Button>
           

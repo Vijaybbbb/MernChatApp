@@ -10,7 +10,7 @@ import {getSender} from '../../utils/chatLogic'
 import GroupChat from '../GroupChat/GroupChat'
 import { setChat } from '../../Redux/chatsSlice'
 
-const MyChats = ({fetchAgain}) => {
+const MyChats = ({fetchAgain,setFetchAgain}) => {
   const {userId}  = useSelector(state=>state.userDetails)
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
@@ -48,7 +48,7 @@ useEffect(()=>{
         alignItems={'center'}
       >
           My Chats
-        <GroupChat>
+        <GroupChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}>
           <Button
             display={'flex'}
             fontSize={{ base: "17px", md: '10px', lg: '17px' }}

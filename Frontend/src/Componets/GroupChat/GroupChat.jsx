@@ -23,7 +23,9 @@ import { setChat } from '../../Redux/chatsSlice'
 
 
 
-const GroupChat = ({children}) => {
+const GroupChat = ({children,fetchAgain,setFetchAgain}) => {
+
+
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [groupChatName, setGroupChatName] = useState()
@@ -87,8 +89,7 @@ const GroupChat = ({children}) => {
               toastMessage('Please fill all the fields')
               return
           }
-          console.log(groupChatName);
-          console.log(selectedUsers);
+
 
           try {
             const {data} = await axiosRequest.post(`/chat/create/group`,{
@@ -97,6 +98,7 @@ const GroupChat = ({children}) => {
             },{withCredentials:true})
      
             dispatch(setChat(data,...chats))
+            setFetchAgain(!fetchAgain)
             onClose()
             toastMessage("New Group Chat Created " ,"success")
             
