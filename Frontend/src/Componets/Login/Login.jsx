@@ -55,7 +55,8 @@ const Login = () => {
       });
       //console.log(response);
       toastMessage('Login Successfull','success') 
-      dispatch(storeUser(response.data))                  
+      dispatch(storeUser(response.data))
+      localStorage.setItem('id',response.data._id)                  
       navigate('/chats')
     } catch (error) {
       //console.log(error);

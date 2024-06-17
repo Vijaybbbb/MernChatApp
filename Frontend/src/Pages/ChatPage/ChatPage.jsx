@@ -8,7 +8,10 @@ import MyChats from '../../Componets/MyChats/MyChats'
 
 const ChatPage = () => {
   
-  const {userId}  = useSelector(state=>state.userDetails)
+  let {userId}  = useSelector(state=>state.userDetails)
+  if(!userId){
+    userId =  localStorage.getItem('id')  
+  }
   const [fetchAgain,setFetchAgain]  = useState(false)
 
 

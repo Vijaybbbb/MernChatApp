@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux'
 import UserBadgeItem from '../UserBadgeItem/UserBadgeItem'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { setSelectedChat } from '../../Redux/selectedChatSlice'
+import UserListItem from '../UserlistItem/UserListItem'
 
 
 const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
@@ -27,7 +28,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
 
        const [groupChatName,setGroupChatName]  = useState()
        const [search,setSearch]  = useState('')
-       const [searchResults,setSearchResults]  = useState([])
+       const [searchResult,setSearchResult]  = useState([])
        const [loading,setLoading]  = useState(false)
        const [renameLoading,setRenameLoading]  = useState(false)
 
@@ -48,10 +49,25 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
                    })
               }
 
+       async function handleSearch(query) {
+              console.log(query);
+              setSearch(query)
+              if (!query) {
+                     return
+              }
 
+              try {
+                     setLoading(true)
+                     const { data } = await axiosRequest.get(`/user/allUsers?search=${search}`, { withCredentials: true })
+                     setLoading(false)
+                     setSearchResult(data)   
+              } catch (error) {
+                     toastMessage('Failed', 'error')
+              }
+       }
 
-       async function handleRemove(){
-              
+       async function handleRemove() {
+
 
        }
 
@@ -81,9 +97,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
               }
        }
 
-       async function handleSearch(){
-
-       }
+       
 
     
 
@@ -142,6 +156,17 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain}) => {
                             />
 
                      </FormControl>
+
+
+                     {
+                loading ? (
+                  <div>Loading</div>
+                ):(
+                  searchResult?.slice(0,4).map((user)=>(
+                    <UserListItem key={user._id} user={user} handleFunction={()=>handleGroup(user)}/>
+                  ))
+                )    
+              }
           </ModalBody>
 
           <ModalFooter>

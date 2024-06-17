@@ -24,7 +24,6 @@ const useFetch = (url) =>{
 
 
        const refetchData = async ()=>{
-              console.log(url);
               setLoading(true)
               try {
                      const res  = await axiosRequest.get(url,{withCredentials:true})

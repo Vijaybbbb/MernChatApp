@@ -10,7 +10,7 @@ import {getSender} from '../../utils/chatLogic'
 import GroupChat from '../GroupChat/GroupChat'
 import { setChat } from '../../Redux/chatsSlice'
 
-const MyChats = ({}) => {
+const MyChats = ({fetchAgain}) => {
   const {userId}  = useSelector(state=>state.userDetails)
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
@@ -20,13 +20,11 @@ const MyChats = ({}) => {
   const navigate  = useNavigate()
   const dispatch = useDispatch()
 
-// useEffect(()=>{
-//  if(data){
-//   dispatch(setChat(data))
-//  }
-// },[data])
+useEffect(()=>{
+  refetchData()
+},[fetchAgain])
 
- 
+
 
   return (
     <Box
