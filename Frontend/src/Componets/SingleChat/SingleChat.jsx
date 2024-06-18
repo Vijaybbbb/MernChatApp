@@ -8,6 +8,7 @@ import Profile from '../Profile/Profile'
 import UpdateGroupChat from '../UpdateGroupChat/UpdateGroupChat'
 import { axiosRequest } from '../../utils/axiosRequest'
 import '../../utils/styles.css'
+import ScrollableChat from '../ScrollableChat/ScrollableChat'
 
 
 const SingleChat = ({fetchAgain,setFetchAgain}) => {
@@ -153,7 +154,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
                         />
                       ):(
                         <div className='messages'>
-                            <ScrollableChat messages={messages}/>
+                            <ScrollableChat messages={messages}/> 
                         </div>
                       )
                     }

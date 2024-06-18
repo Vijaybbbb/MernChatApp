@@ -73,7 +73,7 @@ async function handleSearch(e){
 
        try {
               setLoading(true)
-              const {data}  =await axiosRequest.get(`/user/allUsers?search=${search}`,{withCredentials:true})
+              const {data}  = await axiosRequest.get(`/user/allUsers?search=${search}`,{withCredentials:true})
               setLoading(false)
               setSearchResult(data)
 
