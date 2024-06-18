@@ -9,6 +9,11 @@ import UpdateGroupChat from '../UpdateGroupChat/UpdateGroupChat'
 import { axiosRequest } from '../../utils/axiosRequest'
 import '../../utils/styles.css'
 import ScrollableChat from '../ScrollableChat/ScrollableChat'
+import { io } from 'socket.io-client'
+
+
+const ENDPOINT = 'http://localhost:3000';
+var socket , selectedChatCompare;
 
 
 const SingleChat = ({fetchAgain,setFetchAgain}) => {
@@ -16,6 +21,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const [messages,setMessages]  = useState([])
   const [loading,setLoading]  = useState(false)
   const [newMessage,setNewMessage]  = useState()
+  const [socketConnected,setSocketConnected]  = useState(false)
 
 
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
@@ -24,6 +30,15 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const dispatch = useDispatch()
   const toast = useToast()
 
+
+
+  useEffect(()=>{
+      socket = io(ENDPOINT)
+      socket.emit('setup',userId)
+      socket.on('connection',()=>{
+        setSocketConnected(true)
+      })
+  },[])
 
   function toastMessage(message,status){
     toast({ 
@@ -47,8 +62,6 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
              },{withCredentials:true})
 
-             console.log(data);
-
              setMessages([...messages,data])
 
           } catch (error) {
@@ -70,7 +83,8 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
       const { data } = await axiosRequest.get(`/message/${selectedChat._id}`, { withCredentials: true })
       setMessages(data)
       setLoading(false)
-
+      console.log(selectedChat._id);
+      socket.emit('join chat',selectedChat._id)
 
     } catch (error) {
       console.log(error);
@@ -81,6 +95,9 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
   useEffect(()=>{
     fetchMessages()
+
+    selectedChatCompare = selectedChat;
+    
   },[selectedChat])
 
   return ( 

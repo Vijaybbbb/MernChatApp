@@ -109,7 +109,7 @@ const createGroup = async (req, res, next) => {
                      const fullGroupChat = await Chat.findOne({ _id: groupChat._id })                   
                             .populate('users', '-password')
                             .populate('groupAdmin', '-password')
-                            console.log(fullGroupChat);
+                        
       
 
                     return  res.status(200).json(fullGroupChat)

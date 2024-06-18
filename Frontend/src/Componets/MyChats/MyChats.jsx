@@ -22,7 +22,7 @@ const MyChats = ({fetchAgain,setFetchAgain}) => {
 
 useEffect(()=>{
   refetchData()
-},[fetchAgain])
+},[fetchAgain,chats])
 
 
 

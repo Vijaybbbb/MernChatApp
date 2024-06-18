@@ -25,7 +25,7 @@ const sendMessage  = async (req,res,next) =>{
 
               message = await message.populate('sender','name pic')
               message = await message.populate('chat')
-              message = await User.populate(message,{
+              message = await User.populate(message,{                                              
                      path:'chat.users',
                      select:'name pic email'
               })
@@ -47,15 +47,14 @@ const sendMessage  = async (req,res,next) =>{
 
 
 const allMessages  = async (req,res,next) =>{
-
+            
               try {
-                     const messages  = await Message.find({chatId:req.params.chatId})
+                     const messages  = await Message.find({chat:req.params.chatId})
                                           .populate('sender','name pic email')
                                           .populate('chat')
                                           
                      res.status(200).json(messages);
-                                   
-
+                     
               } catch (error) {
                      console.log(error);
                      res.status(500).json('Internal Server Error');

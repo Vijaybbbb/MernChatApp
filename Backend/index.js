@@ -3,7 +3,7 @@ const cors = require('cors')
 const app  = express()
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser');   
+const bodyParser = require('body-parser'); 
 
 const { connect } = require('./Utils/databaseConnection')
 dotenv.config()
@@ -58,4 +58,39 @@ app.post('/clearCookie', (req, res) => {
        }
    });
 
-app.listen(PORT,()=>{`Server Started On Port 3000`})
+const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
+
+const io = require('socket.io')(server,{
+       pingTimeout:60000,
+       cors:{
+              origin: 'http://localhost:5173',
+              credentials: true 
+       }
+})
+
+io.on('connection',(socket)=>{
+       console.log("conected to Socket.io");
+
+       socket.on('setup',(userData)=>{
+              socket.join(userData)
+              console.log(userData);
+              socket.emit('connected')
+
+              socket.on('join chat',(room)=>{
+                     console.log( room);
+
+                     socket.join(room)
+                     console.log('user joined to ',+ room);
+
+
+              })
+
+              socket.on('new message',(newMessageRecived)=>{
+                     console.log( room);
+
+  
+
+
+              })
+       })
+})
