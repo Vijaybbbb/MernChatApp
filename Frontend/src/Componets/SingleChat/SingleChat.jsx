@@ -10,7 +10,8 @@ import { axiosRequest } from '../../utils/axiosRequest'
 import '../../utils/styles.css'
 import ScrollableChat from '../ScrollableChat/ScrollableChat'
 import { io } from 'socket.io-client'
-
+import Lottie from 'react-lottie'
+import animationData from '../../../src/animation/Animation - 1718786463716.json'
 
 const ENDPOINT = 'http://localhost:3000';
 var socket , selectedChatCompare;
@@ -22,6 +23,9 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const [loading,setLoading]  = useState(false)
   const [newMessage,setNewMessage]  = useState()
   const [socketConnected,setSocketConnected]  = useState(false)
+  const [typing,setTyping]  = useState(false)
+  const [isTyping,setIsTyping]  = useState(false)
+
 
 
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
@@ -30,15 +34,42 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const dispatch = useDispatch()
   const toast = useToast()
 
+  const defaultOptions={
+    loop:true,
+    autoplay:true,
+    animationData:animationData,
+    rendererSettings:{
+      preserveAspectRatio:"xMidYMid slice"
+    }
+
+  }
 
 
   useEffect(()=>{
       socket = io(ENDPOINT)
       socket.emit('setup',userId)
-      socket.on('connection',()=>{
+      socket.on('connected',()=>{
         setSocketConnected(true)
       })
+      socket.on('typing',()=>{
+        setIsTyping(true)
+      })
+      socket.on('stop typing',()=>{
+        setIsTyping(false)
+      })
   },[])
+
+
+  useEffect(()=>{
+    socket.on('message recieved',(newMessageRecived)=>{
+        if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecived.chat._id){
+          //give 
+        }
+        else{
+          setMessages([...messages,newMessageRecived])
+        }
+    })
+  })
 
   function toastMessage(message,status){
     toast({ 
@@ -54,6 +85,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
  async  function sendMessage(e){
     if(e.key === 'Enter'  && newMessage){
+          socket.emit('stop typing',selectedChat._id)
           try {
              setNewMessage('')
              const {data}  = await axiosRequest.post(`/message`,{
@@ -61,18 +93,39 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
                 chatId:selectedChat._id
 
              },{withCredentials:true})
-
+             socket.emit('new message',data)
              setMessages([...messages,data])
 
           } catch (error) {
                  console.log(error);
-                toastMessage('Sending failed','error')
+                toastMessage('Sending failed','error')   
           }
     }
   }
 
   function typingHandler(e){
     setNewMessage(e.target.value)
+
+    if(!socketConnected) return
+
+    if(!typing){
+      setTyping(true)
+      socket.emit('typing',selectedChat._id)
+    }
+
+    let lastTypingTime =  new Date().getTime()
+
+    var timerLength = 3000
+
+    setTimeout(()=>{
+        var timeNow  = new Date().getTime()
+        var timeDiff = timeNow - lastTypingTime
+
+        if(timeDiff >= timerLength && typing){
+              socket.emit('stop typing',selectedChat._id)
+              setTyping(false)
+        }
+    },timerLength)
   }
 
 
@@ -97,7 +150,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
     fetchMessages()
 
     selectedChatCompare = selectedChat;
-    
+
   },[selectedChat])
 
   return ( 
@@ -177,10 +230,13 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
                     }
 
                     <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+                        {isTyping?<div>
+                          <Text style={{color:'grey',marginBottom:"5px"}}>Typing...</Text>   
+                        </div>:<></>}
                         <Input
                          variant={'filled'}
                          bg={'#E0E0E0'}
-                         placeholder='Enter a message...'
+                         placeholder='Enter a message...' 
                          onChange={typingHandler}
                          value={newMessage}
                         />

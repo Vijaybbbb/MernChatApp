@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ScrollableFeed from 'react-scrollable-feed'
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from '../../utils/chatLogic'
 import { useSelector } from 'react-redux'
@@ -7,7 +7,8 @@ import { Avatar, Tooltip } from '@chakra-ui/react'
 const ScrollableChat = ({messages}) => {
 
   const {userId}  = useSelector(state=>state.userDetails)
-
+  console.log(messages);
+  
 
   return (
     <ScrollableFeed>
@@ -35,8 +36,9 @@ const ScrollableChat = ({messages}) => {
                                           </Tooltip>
                                           )
                                    }
-                                   <span style={{
-                                          backgroundColor: `${m.sender._id === userId ? '#BEE3F8' : '#6ef8a5SD0'}`
+                                   <div style={{
+                                          background: `${m.sender._id === userId ? '#BEE3F8' : '#3cd67fSD0' }`
+                                          //  background: '#BEE3F8' 
                                    ,
                                    borderRadius:'20px',
                                    padding:'5px 15px',
@@ -45,9 +47,9 @@ const ScrollableChat = ({messages}) => {
                                    marginTop:isSameUser(messages,m,i,userId) ? 3 : 10
 
                                    }}>
-                                                 {m.content}
+                                                 {m.content}  
 
-                                   </span>
+                                   </div>
                      </div>
               ))
        }

@@ -69,27 +69,33 @@ const io = require('socket.io')(server,{
 })
 
 io.on('connection',(socket)=>{
-       console.log("conected to Socket.io");
-
+       //console.log("conected to Socket.io");
        socket.on('setup',(userData)=>{
               socket.join(userData)
-              console.log(userData);
+             // console.log(userData);
               socket.emit('connected')
 
               socket.on('join chat',(room)=>{
-                     console.log( room);
-
+                    // console.log( room);
                      socket.join(room)
-                     console.log('user joined to ',+ room);
-
-
+                     //console.log('user joined to ',+ room);
               })
 
+              socket.on('typing',(room)=>socket.in(room).emit('typing'))
+              socket.on('stop typing',(room)=>socket.in(room).emit('stop typing'))
+
               socket.on('new message',(newMessageRecived)=>{
-                     console.log( room);
 
-  
+                     var chat  = newMessageRecived.chat;   
+                     if(!chat ) return console.log('chat not defined');
+                     //console.log( chat);
 
+                     chat.users.forEach(userData => {
+                            if(userData._id == newMessageRecived.sender._id) return;
+
+                            socket.in(userData._id).emit('message recieved' , newMessageRecived);
+
+                     });
 
               })
        })
