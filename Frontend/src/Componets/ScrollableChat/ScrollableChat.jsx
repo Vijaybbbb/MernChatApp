@@ -37,7 +37,7 @@ const ScrollableChat = ({messages}) => {
                                           )
                                    }
                                    <div style={{
-                                          background: `${m.sender._id === userId ? '#BEE3F8' : '#3cd67fSD0' }`
+                                          background: `${m.sender._id === userId ? '#BEE3F8' : '#9ad99f' }`
                                           //  background: '#BEE3F8' 
                                    ,
                                    borderRadius:'20px',

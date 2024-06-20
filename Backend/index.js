@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-       origin: 'http://localhost:5173',
+       origin: 'http://localhost:5174',
        credentials: true 
        }))
 
@@ -63,7 +63,7 @@ const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 const io = require('socket.io')(server,{
        pingTimeout:60000,
        cors:{
-              origin: 'http://localhost:5173',
+              origin: 'http://localhost:5174',
               credentials: true 
        }
 })
@@ -78,7 +78,7 @@ io.on('connection',(socket)=>{
               socket.on('join chat',(room)=>{
                     // console.log( room);
                      socket.join(room)
-                     //console.log('user joined to ',+ room);
+                     //console.log('user joined to ',+ room);    
               })
 
               socket.on('typing',(room)=>socket.in(room).emit('typing'))
