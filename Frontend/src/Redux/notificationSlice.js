@@ -8,12 +8,17 @@ const notificationSlice = createSlice({
        },
        reducers:{
               setNotification:(state,action)=>{
-       
                      state.notification = action.payload
+              },
+              removeNotification(state, action) {
+                     const notificationId = action.payload; // Extract the ID for clarity
+                     state.notification = state.notification.filter(
+                       (notification) => notification._id !== notificationId
+                     ); // Use filter for efficient removal based on ID
               },
              
        }
 })
  
-export const {setNotification} = notificationSlice.actions
+export const {setNotification,removeNotification} = notificationSlice.actions
 export default notificationSlice.reducer

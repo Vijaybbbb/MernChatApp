@@ -11,8 +11,7 @@ import { axiosRequest } from '../../utils/axiosRequest'
 import '../../utils/styles.css'
 import ScrollableChat from '../ScrollableChat/ScrollableChat'
 import { io } from 'socket.io-client'
-import Lottie from 'react-lottie'
-import animationData from '../../../src/animation/Animation - 1718786463716.json'
+
 
 const ENDPOINT = 'http://localhost:3000';
 var socket , selectedChatCompare;
@@ -144,9 +143,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
   useEffect(()=>{
     fetchMessages()
-
     selectedChatCompare = selectedChat;
-
   },[selectedChat])
 
   return ( 

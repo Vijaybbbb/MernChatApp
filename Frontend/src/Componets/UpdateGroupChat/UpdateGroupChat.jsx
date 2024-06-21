@@ -83,10 +83,34 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                             userId:userToRemove._id ? userToRemove._id : userId
                      },{withCredentials:true})
 
-                     userId._id == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
+                     userId == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
                      setFetchAgain(!fetchAgain)
                      fetchMessages()
                      setLoading(true)
+                     toastMessage('User Removed Successfully','success')
+
+
+              } catch (error) {
+                     console.log(error);
+                     toastMessage('Something went wrong','error')
+                     
+              }
+
+       }
+
+       async function exitGroup() {
+              try {
+                     setLoading(true)
+                     const {data} = await axiosRequest.put(`/chat/removeGroup`,{
+                            chatId:selectedChat._id,
+                            userId
+                     },{withCredentials:true})
+
+                     setSelectedChat(null) 
+                     setFetchAgain(!fetchAgain)
+                     fetchMessages()
+                     setLoading(true)
+                     onClose()
                      toastMessage('User Removed Successfully','success')
 
 
@@ -231,7 +255,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
           <ModalFooter>
             <Button colorScheme='red' mr={3} onClick={()=>
               {
-                     handleRemove(userId)
+                     exitGroup()
                      
                      }}> 
               Leave Group

@@ -5,7 +5,7 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, Modal
 import React, { Children } from 'react'
 
 const Profile = ({user,children}) => {
-
+console.log(user);
        const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -40,9 +40,9 @@ const Profile = ({user,children}) => {
                             src={user.pic}
                             alt='Image'
                       />
+          <Text mt={5}>{user?.email}</Text>
                       
           </ModalBody>
-
           <ModalFooter  >
             <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close

@@ -1,16 +1,15 @@
-import React, { Profiler, useState } from 'react'
+import React, { Profiler, useEffect, useState } from 'react'
 import './SlideDrawer.css'
-import { Avatar, Box, Button, ChakraBaseProvider, Input, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
+import { Avatar, Badge, Box, Button, ChakraBaseProvider, Input, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, Tooltip, useDisclosure, useToast } from '@chakra-ui/react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import Profile from '../Profile/Profile'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { useNavigate } from 'react-router-dom'
 import {storeUser} from '../../Redux/userSlice'
-import {setNotification} from '../../Redux/notificationSlice'
+import {removeNotification, setNotification} from '../../Redux/notificationSlice'
 import {setSelectedChat} from '../../Redux/selectedChatSlice'
 import {setChat} from '../../Redux/chatsSlice'
-
 
 import {
        Drawer,
@@ -23,7 +22,7 @@ import {
      } from '@chakra-ui/react'
 import Chatloading from '../Chatloading/Chatloading'
 import UserListItem from '../UserlistItem/UserListItem'
-import { getSender } from '../../utils/chatLogic'
+import { getSender, getSenderFull } from '../../utils/chatLogic'
 
 
 
@@ -33,8 +32,10 @@ const SlideDrawer = () => {
 
  const {userName,pic,userId} = useSelector(state => state.userDetails)
  const user = useSelector(state => state.userDetails)
- const {chats} = useSelector(state => state.chatDetails)
+ const {chats} = useSelector(state => state.chatDetails) 
+ const {selectedChat} = useSelector(state => state.selectedChatDetails)
 
+  const [reciver,setReciever]  = useState('')
   const [search,setSearch]  = useState('')
   const [searchResult,setSearchResult]  = useState([])
   const [loading,setLoading]  = useState(false)
@@ -46,7 +47,11 @@ const SlideDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
+// useEffect(()=>{
+       
+// },[selectedChat])
 
+// console.log(notification);  
 
   function handleLogout(e){
        e.preventDefault()
@@ -140,13 +145,22 @@ async function accessChat(userid) {
 
               <div>
                      <Menu>
-                            <MenuButton p={1}>
-                                   <BellIcon fontSize={'2xl'} m={1} />
-                            </MenuButton>
+                                     <MenuButton p={1}>
+                                            <BellIcon fontSize={'2xl'} m={1} />
+                                            <Badge borderRadius={'full'} bg={'red'} color={'white'} mt={-6} ml={-3}>
+                                                 {notification.length > 0  ? notification.length : ''}
+                                          </Badge>
+                                           
+ 
+                                     </MenuButton>
                             <MenuList pl={2}>
                                    {!notification.length ? " No New Messages" :
                                    notification.map(not=>(
-                                          <MenuItem key={not._id}>
+                                          <MenuItem key={not._id} onClick={()=>{
+                                                 setSelectedChat(not.chat)
+                                                 accessChat(getSenderFull(userId,not.chat.users)._id)
+                                                 dispatch(removeNotification(not._id))
+                                          }}>
                                                  {not?.chat?.isGroupChat ? `New Message in ${not?.chat?.chatName}`
                                                   : `New Message From ${getSender(userId,not?.chat?.users)}`}
                                           </MenuItem>
