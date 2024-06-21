@@ -46,7 +46,7 @@ const SlideDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
-console.log(notification);
+
 
   function handleLogout(e){
        e.preventDefault()

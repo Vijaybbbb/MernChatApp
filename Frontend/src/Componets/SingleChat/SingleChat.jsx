@@ -29,21 +29,12 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
 
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
-  const {chats}  = useSelector(state=>state.chatDetails)
   const {notification}  = useSelector(state=>state.notificationDetails)
   const {userId}  = useSelector(state=>state.userDetails)
   const dispatch = useDispatch()
   const toast = useToast()
 
-  const defaultOptions={
-    loop:true,
-    autoplay:true,
-    animationData:animationData,
-    rendererSettings:{
-      preserveAspectRatio:"xMidYMid slice"
-    }
-
-  }
+ 
 
 
   useEffect(()=>{
@@ -65,7 +56,8 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
     socket.on('message recieved',(newMessageRecived)=>{
         if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecived.chat._id){
               if(!notification.includes(newMessageRecived)){
-                  dispatch(setNotification(newMessageRecived))
+        
+                  dispatch(setNotification([newMessageRecived]))
                   setFetchAgain(!fetchAgain)
               }
         }

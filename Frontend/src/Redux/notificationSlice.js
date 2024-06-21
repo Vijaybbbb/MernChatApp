@@ -8,8 +8,8 @@ const notificationSlice = createSlice({
        },
        reducers:{
               setNotification:(state,action)=>{
-                     console.log(action.payload);
-                     state.notification.push(action.payload)
+       
+                     state.notification = action.payload
               },
              
        }
