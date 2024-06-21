@@ -3,6 +3,7 @@ import { Box, FormControl, IconButton, Input, Spinner, Text, useToast } from '@c
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedChat } from '../../Redux/selectedChatSlice'
+import { setNotification } from '../../Redux/notificationSlice'
 import { getSender,getSenderFull } from '../../utils/chatLogic'
 import Profile from '../Profile/Profile'
 import UpdateGroupChat from '../UpdateGroupChat/UpdateGroupChat'
@@ -27,9 +28,9 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const [isTyping,setIsTyping]  = useState(false)
 
 
-
   const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
   const {chats}  = useSelector(state=>state.chatDetails)
+  const {notification}  = useSelector(state=>state.notificationDetails)
   const {userId}  = useSelector(state=>state.userDetails)
   const dispatch = useDispatch()
   const toast = useToast()
@@ -63,7 +64,10 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   useEffect(()=>{
     socket.on('message recieved',(newMessageRecived)=>{
         if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecived.chat._id){
-          //give 
+              if(!notification.includes(newMessageRecived)){
+                  dispatch(setNotification(newMessageRecived))
+                  setFetchAgain(!fetchAgain)
+              }
         }
         else{
           setMessages([...messages,newMessageRecived])
@@ -136,7 +140,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
       const { data } = await axiosRequest.get(`/message/${selectedChat._id}`, { withCredentials: true })
       setMessages(data)
       setLoading(false)
-      console.log(selectedChat._id);
+   
       socket.emit('join chat',selectedChat._id)
 
     } catch (error) {

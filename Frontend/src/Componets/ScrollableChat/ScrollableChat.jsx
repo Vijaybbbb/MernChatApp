@@ -7,8 +7,6 @@ import { Avatar, Tooltip } from '@chakra-ui/react'
 const ScrollableChat = ({messages}) => {
 
   const {userId}  = useSelector(state=>state.userDetails)
-  console.log(messages);
-  
 
   return (
     <ScrollableFeed>

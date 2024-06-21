@@ -7,6 +7,7 @@ import Profile from '../Profile/Profile'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { useNavigate } from 'react-router-dom'
 import {storeUser} from '../../Redux/userSlice'
+import {setNotification} from '../../Redux/notificationSlice'
 import {setSelectedChat} from '../../Redux/selectedChatSlice'
 import {setChat} from '../../Redux/chatsSlice'
 
@@ -22,6 +23,7 @@ import {
      } from '@chakra-ui/react'
 import Chatloading from '../Chatloading/Chatloading'
 import UserListItem from '../UserlistItem/UserListItem'
+import { getSender } from '../../utils/chatLogic'
 
 
 
@@ -37,13 +39,14 @@ const SlideDrawer = () => {
   const [searchResult,setSearchResult]  = useState([])
   const [loading,setLoading]  = useState(false)
   const [loadingChat,setLoadingChat]  = useState()
-  //const [selectedChat,setSelectedChat]  = useState()
+  const {notification}  = useSelector(state=>state.notificationDetails)
 
   const navigate  = useNavigate()
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
+console.log(notification);
 
   function handleLogout(e){
        e.preventDefault()
@@ -54,6 +57,8 @@ const SlideDrawer = () => {
                      userName:null,
                      pic:null
               }))
+              dispatch(setSelectedChat(null)); 
+              dispatch(setNotification([]));
               navigate('/')
              }).catch(err=>console.log(err))
 }
@@ -138,7 +143,15 @@ async function accessChat(userid) {
                             <MenuButton p={1}>
                                    <BellIcon fontSize={'2xl'} m={1} />
                             </MenuButton>
-                            {/* <MenuList></MenuList> */}
+                            <MenuList pl={2}>
+                                   {!notification.length ? " No New Messages" :
+                                   notification.map(not=>(
+                                          <MenuItem key={not._id}>
+                                                 {not?.chat?.isGroupChat ? `New Message in ${not?.chat?.chatName}`
+                                                  : `New Message From ${getSender(userId,not?.chat?.users)}`}
+                                          </MenuItem>
+                                   ))}
+                            </MenuList>
                      </Menu>
                      <Menu>
                             <MenuButton as={Button} rightIcon={<ChevronDownIcon/>}>
