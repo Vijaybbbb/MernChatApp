@@ -20,7 +20,14 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
+// Socket.io setup with CORS configuration
+const io = require('socket.io')(server, {
+       pingTimeout: 60000,
+       cors: {
+           origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+           credentials: true,
+       },
+   });
 
 app.use(cors({
        origin: 'https://magnificent-cactus-8eecd6.netlify.app',
@@ -60,14 +67,7 @@ app.post('/clearCookie', (req, res) => {
 
 const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 
-// Socket.io setup with CORS configuration
-const io = require('socket.io')(server, {
-       pingTimeout: 60000,
-       cors: {
-           origin: 'https://magnificent-cactus-8eecd6.netlify.app',
-           credentials: true,
-       },
-   });
+
 
 io.on('connection',(socket)=>{
        //console.log("conected to Socket.io");
