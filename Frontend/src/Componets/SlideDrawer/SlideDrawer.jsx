@@ -47,11 +47,6 @@ const SlideDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
-// useEffect(()=>{
-       
-// },[selectedChat])
-
-// console.log(notification);  
 
   function handleLogout(e){
        e.preventDefault()

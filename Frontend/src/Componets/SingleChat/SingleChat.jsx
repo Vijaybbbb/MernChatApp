@@ -33,8 +33,10 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
   const dispatch = useDispatch()
   const toast = useToast()
 
- 
-
+  useEffect(()=>{
+    fetchMessages()
+    selectedChatCompare = selectedChat;
+  },[selectedChat])
 
   useEffect(()=>{
       socket = io(ENDPOINT)
@@ -125,10 +127,11 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
 
   async function fetchMessages() {
+    console.log('fetching again');
     if (!selectedChat) return
     try {
       setLoading(true)
-      const { data } = await axiosRequest.get(`/message/${selectedChat._id}`, { withCredentials: true })
+      const { data } = await axiosRequest.get(`/message/${selectedChat?._id}`, { withCredentials: true })
       setMessages(data)
       setLoading(false)
    
@@ -141,10 +144,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
   }
 
-  useEffect(()=>{
-    fetchMessages()
-    selectedChatCompare = selectedChat;
-  },[selectedChat])
+ 
 
   return ( 
     <>
@@ -226,13 +226,17 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
                         {isTyping?<div>
                           <Text style={{color:'grey',marginBottom:"5px"}}>Typing...</Text>   
                         </div>:<></>}
-                        <Input
+
+                        
+                          <Input
                          variant={'filled'}
                          bg={'#E0E0E0'}
                          placeholder='Enter a message...' 
                          onChange={typingHandler}
                          value={newMessage}
                         />
+                       
+                        
                     </FormControl>
 
               </Box>

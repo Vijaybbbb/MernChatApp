@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
        Modal,
        ModalOverlay,
@@ -16,7 +16,7 @@ import {
        Input,
      } from '@chakra-ui/react'
 import { ViewIcon } from '@chakra-ui/icons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import UserBadgeItem from '../UserBadgeItem/UserBadgeItem'
 import { axiosRequest } from '../../utils/axiosRequest'
 import { setSelectedChat } from '../../Redux/selectedChatSlice'
@@ -28,18 +28,17 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
 
        const [groupChatName,setGroupChatName]  = useState()
        const [search,setSearch]  = useState('')
+       const [data,setData]  = useState('')
        const [searchResult,setSearchResult]  = useState([])
        const [loading,setLoading]  = useState(false)
        const [renameLoading,setRenameLoading]  = useState(false)
-
+       const dispatch = useDispatch()
        const {selectedChat}  = useSelector(state=>state.selectedChatDetails)
        const {chats}  = useSelector(state=>state.chatDetails)
        const {userId}  = useSelector(state=>state.userDetails)
        const { isOpen, onOpen, onClose } = useDisclosure() 
        const toast = useToast()
 
-
-            
 
        
        function toastMessage(message,status){
@@ -53,7 +52,6 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
               }
 
        async function handleSearch(query) {
-              console.log(query);
               setSearch(query)
               if (!query) {
                      return
@@ -83,7 +81,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                             userId:userToRemove._id ? userToRemove._id : userId
                      },{withCredentials:true})
 
-                     userId == userToRemove._id ? setSelectedChat(null) : setSelectedChat(data)
+                     userId == userToRemove._id ? dispatch(setSelectedChat(null)) : dispatch(setSelectedChat(data))
                      setFetchAgain(!fetchAgain)
                      fetchMessages()
                      setLoading(true)
@@ -106,7 +104,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                             userId
                      },{withCredentials:true})
 
-                     setSelectedChat(null) 
+                     dispatch(setSelectedChat(null))
                      setFetchAgain(!fetchAgain)
                      fetchMessages()
                      setLoading(true)
@@ -141,7 +139,7 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                             userId:userToAdd._id
                      },{withCredentials:true})
 
-                     setSelectedChat(data)
+                     dispatch(setSelectedChat(data))
                      setFetchAgain(!fetchAgain)
                      setLoading(true)
                      toastMessage('User Added Successfully','success')
@@ -166,9 +164,8 @@ const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                             },
                             
                             {withCredentials:true})
-
-                            setSelectedChat(data)
-                            setFetchAgain(!fetchAgain)
+                            setFetchAgain(!fetchAgain)                        
+                            dispatch(setSelectedChat(data))
                             setRenameLoading(false)
                             toastMessage('Updated Name Successfully','success')
 
