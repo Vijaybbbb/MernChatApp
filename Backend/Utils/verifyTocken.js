@@ -4,14 +4,13 @@ const { createError } = require('./error.js');
 const User = require('../Model/userModel.js');
 
 const verifyTocken = async(req,res,next) =>{
-       console.log("tocken verification");
-     
+       
        req.user = req.cookies.user_id
        //take value from cookie
        try {
 
               const tocken = await req.cookies.access_tocken;
-              const userId = req.cookies.user_id
+              const userId = JSON.parse(req.cookies.user_id).j
               const user = await User.findById(new mongoose.Types.ObjectId(userId))
 
               if(!tocken || !userId){
