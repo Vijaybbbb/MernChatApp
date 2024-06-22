@@ -24,11 +24,13 @@ const register = async (req, res, next) => {
               const { password: userPassword, isAdmin, ...otherDetails } = user._doc
               res.cookie('access_tocken', tocken, {
                      httpOnly: true,
-                     path: '/'
+                     path: '/',
+                     secure: process.env.NODE_ENV === 'production', // Ensure this is set for production
+
               }
               ).cookie('user_id', user._id, {
                      httpOnly: true,
-                    // secure: process.env.NODE_ENV === 'production',
+                     secure: process.env.NODE_ENV === 'production',
                      path: '/', // Restrict access to the root path (adjust as needed)
                     // expires: new Date(Date.now() + 60 * 60 * 1000), // Set a shorter expiration for token (e.g., 1 hour)
                    }).status(200).json({ ...otherDetails });
