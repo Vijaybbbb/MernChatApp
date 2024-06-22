@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import {axiosRequest} from '../../utils/axiosRequest'
 import { useSelector } from 'react-redux'
 import SlideDrawer from '../../Componets/SlideDrawer/SlideDrawer'
 import { Box } from '@chakra-ui/react'
