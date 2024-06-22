@@ -5,7 +5,7 @@ const User = require('../Model/userModel.js');
 
 const verifyTocken = async(req,res,next) =>{
        
-       req.user = req.cookies.user_id
+       req.user = JSON.parse(req.cookies.user_id).j
        //take value from cookie
        try {
 
