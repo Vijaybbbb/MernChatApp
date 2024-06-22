@@ -4,6 +4,7 @@ const { createError } = require('./error.js');
 const User = require('../Model/userModel.js');
 
 const verifyTocken = async(req,res,next) =>{
+       console.log("tocken verification");
      
        req.user = req.cookies.user_id
        //take value from cookie
