@@ -64,7 +64,8 @@ const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 const io = require('socket.io')(server, {
        pingTimeout: 60000,
        cors: {
-           origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+           //origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+           origin: '*',
            methods: ['GET', 'POST','PUT'],
            credentials: true,
        },
