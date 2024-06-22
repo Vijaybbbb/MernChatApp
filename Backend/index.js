@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-       origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+       origin: '*',
        credentials: true 
        }))
 
