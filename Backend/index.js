@@ -60,13 +60,15 @@ app.post('/clearCookie', (req, res) => {
 
 const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 
-const io = require('socket.io')(server,{
-       pingTimeout:60000,
-       cors:{
-              origin: 'https://friendly-kashata-77d3b9.netlify.app',
-              credentials: true 
-       }
-})
+// Socket.io setup with CORS configuration
+const io = require('socket.io')(server, {
+       pingTimeout: 60000,
+       cors: {
+           origin: 'https://friendly-kashata-77d3b9.netlify.app',
+           methods: ['GET', 'POST'],
+           credentials: true,
+       },
+   });
 
 io.on('connection',(socket)=>{
        //console.log("conected to Socket.io");
