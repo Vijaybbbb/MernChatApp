@@ -13,7 +13,7 @@ import ScrollableChat from '../ScrollableChat/ScrollableChat'
 import { io } from 'socket.io-client'
 
 
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = 'https://mernchatapp-5ev3.onrender.com';
 var socket , selectedChatCompare;
 
 
