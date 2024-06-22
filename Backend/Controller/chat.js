@@ -49,6 +49,7 @@ const accessChat = async (req, res, next) => {
 
 
 const fetchChat = async (req, res, next) => {
+       console.log("fetching chats");
        try {
               Chat.find({
                      users:
