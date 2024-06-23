@@ -59,7 +59,6 @@ app.post('/clearCookie', (req, res) => {
    });
 
 const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
-
 // Socket.io setup with CORS configuration
 const io = require('socket.io')(server, {
        handlePreflightRequest: (req, res) => {
@@ -72,6 +71,8 @@ const io = require('socket.io')(server, {
               res.end();
           }
    });
+
+io.set('origins', 'https://magnificent-cactus-8eecd6.netlify.app');
 
 io.on('connection',(socket)=>{
        //console.log("conected to Socket.io");
