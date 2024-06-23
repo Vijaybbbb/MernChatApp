@@ -62,11 +62,15 @@ const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 
 // Socket.io setup with CORS configuration
 const io = require('socket.io')(server, {
-       pingTimeout: 60000,
-       cors: {
-              origin: 'https://magnificent-cactus-8eecd6.netlify.app',
-              credentials: true   
-       },
+       handlePreflightRequest: (req, res) => {
+              const headers = {
+                  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                  "Access-Control-Allow-Origin": 'https://magnificent-cactus-8eecd6.netlify.app', //or the specific origin you want to give access to,
+                  "Access-Control-Allow-Credentials": true
+              };
+              res.writeHead(200, headers);
+              res.end();
+          }
    });
 
 io.on('connection',(socket)=>{
