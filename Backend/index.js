@@ -48,7 +48,7 @@ app.use((err,req,res,next)=>{
 })
 
 app.post('/clearCookie', (req, res) => {
-       // Set the cookie's expiration date to a past time
+       
        try {
               res.cookie('access_tocken', '', { expires: new Date(0) });
               // Send a response
@@ -68,19 +68,22 @@ const io = require('socket.io')(server, {
            credentials: true   
        },
    });
+
+
+
 io.set('origins', 'https://magnificent-cactus-8eecd6.netlify.app');
 
 io.on('connection',(socket)=>{
-       //console.log("conected to Socket.io");
+      
        socket.on('setup',(userData)=>{
               socket.join(userData)
-             // console.log(userData);
+           
               socket.emit('connected')
 
               socket.on('join chat',(room)=>{
-                    // console.log( room);
+                   
                      socket.join(room)
-                     //console.log('user joined to ',+ room);    
+                       
               })
 
               socket.on('typing',(room)=>socket.in(room).emit('typing'))
@@ -90,7 +93,7 @@ io.on('connection',(socket)=>{
 
                      var chat  = newMessageRecived.chat;   
                      if(!chat ) return console.log('chat not defined');
-                     //console.log( chat);
+                    
 
                      chat.users.forEach(userData => {
                             if(userData._id == newMessageRecived.sender._id) return;
