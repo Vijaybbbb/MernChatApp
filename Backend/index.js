@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-       origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+       origin: 'http://localhost:5173',
        credentials: true 
        }))
 
@@ -64,14 +64,14 @@ const server = app.listen(PORT,()=>{`Server Started On Port 3000`})
 const io = require('socket.io')(server, {
        pingTimeout: 60000,
        cors: {
-           origin: 'https://magnificent-cactus-8eecd6.netlify.app',
+           origin: 'http://localhost:5173',
            credentials: true   
        },
    });
 
 
 
-io.set('origins', 'https://magnificent-cactus-8eecd6.netlify.app');
+//io.set('origins', 'http://localhost:5173/');
 
 io.on('connection',(socket)=>{
       
