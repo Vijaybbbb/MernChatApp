@@ -1,7 +1,7 @@
 const jwt  = require('jsonwebtoken');
 const mongoose  = require('mongoose');
 const { createError } = require('./error.js');
-const User = require('../Model/userModel.js');
+const User = require('../../User Microservice/Model/userModel.js');
 
 const verifyTocken = async(req,res,next) =>{
        

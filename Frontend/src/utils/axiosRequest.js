@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const sampleUrl="http://localhost:3000"
+const sampleUrl="http://localhost"
 
 export const axiosRequest=axios.create({
        baseURL:sampleUrl,  
