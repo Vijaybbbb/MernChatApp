@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const sampleUrl="https://mernchatapp-txca.onrender.com"
+const sampleUrl="http://localhost"
 
 export const axiosRequest=axios.create({
        baseURL:sampleUrl,  
